@@ -41,7 +41,7 @@ public class TodoService {
 
             preparedStatement.setString(1, task);
             preparedStatement.setString(2, dueDate);
-            preparedStatement.setBoolean(3, false); // Initialize as not completed
+            preparedStatement.setBoolean(3, false);
             preparedStatement.setString(4, priority);
             preparedStatement.setString(5, category);
 
