@@ -1,47 +1,44 @@
 package com.example.todolist.todolist;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TodoService {
+    public class TodoService {
 
-    private static final String url = "jdbc:mysql://localhost:3306/todo_db";
-    private static final String username = "root";
-    private static final String password = "Muthuchitra@04";
+        private static final String url = "jdbc:mysql://localhost:3306/todo_db";
+        private static final String username = "root";
+        private static final String password = "Muthuchitra@04";
 
-    public TodoService() {
-        createTables();
-    }
-
-    private void createTables() {
-        try (Connection connection = DriverManager.getConnection(url, username, password);
-             Statement statement = connection.createStatement()) {
-
-            statement.executeUpdate("DROP TABLE IF EXISTS todos");
-
-            String createTodoTableQuery = "CREATE TABLE IF NOT EXISTS todos (" +
-                    "id INT AUTO_INCREMENT PRIMARY KEY," +
-                    "task VARCHAR(255) NOT NULL," +
-                    "dueDate DATE," +
-                    "completed BOOLEAN DEFAULT FALSE," +
-                    "priority VARCHAR(20)," +
-                    "category VARCHAR(50))";
-            statement.executeUpdate(createTodoTableQuery);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        public TodoService() {
+            createTables();
         }
-    }
 
-    public void addTodo(String task, String dueDate, String priority, String category) {
+        private void createTables() {
+            try (Connection connection = DriverManager.getConnection(url, username, password);
+                 Statement statement = connection.createStatement()) {
+
+                statement.executeUpdate("DROP TABLE IF EXISTS todos, users");
+                String createTodoTableQuery = "CREATE TABLE IF NOT EXISTS todos (" +
+                        "id INT AUTO_INCREMENT PRIMARY KEY," +
+                        "task VARCHAR(255) NOT NULL," +
+                        "dueDate DATE," +
+                        "completed BOOLEAN DEFAULT FALSE," +
+                        "priority VARCHAR(20)," +
+                        "category VARCHAR(50))";
+                statement.executeUpdate(createTodoTableQuery);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        public void addTodo(String task, String dueDate, String priority, String category) {
         try (Connection connection = DriverManager.getConnection(url, username, password);
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "INSERT INTO todos (task, dueDate, completed, priority, category) VALUES (?, ?, ?, ?, ?)")) {
 
             preparedStatement.setString(1, task);
             preparedStatement.setString(2, dueDate);
-            preparedStatement.setBoolean(3, false); // Initialize as not completed
+            preparedStatement.setBoolean(3, false);
             preparedStatement.setString(4, priority);
             preparedStatement.setString(5, category);
 

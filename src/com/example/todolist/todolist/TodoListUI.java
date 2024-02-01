@@ -14,6 +14,8 @@ public class TodoListUI extends JFrame {
     private JTextField priorityField;
     private JTextField categoryField;
 
+    private boolean isDarkMode = false;
+
     public TodoListUI() {
         todoService = new TodoService();
         listModel = new DefaultListModel<>();
@@ -25,8 +27,8 @@ public class TodoListUI extends JFrame {
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new FlowLayout());
 
-        taskField = new JTextField(30);
-        dateField = new JTextField(20);
+        taskField = new JTextField(20);
+        dateField = new JTextField(10);
         priorityField = new JTextField(10);
         categoryField = new JTextField(10);
 
@@ -43,13 +45,13 @@ public class TodoListUI extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 addTask();
             }
         });
         inputPanel.add(addButton);
 
         add(inputPanel, BorderLayout.NORTH);
-
 
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BorderLayout());
@@ -65,18 +67,26 @@ public class TodoListUI extends JFrame {
             }
         });
 
-
-        Dimension buttonSize = new Dimension(1000, 80);
-        completeButton.setPreferredSize(buttonSize);
-
         listPanel.add(scrollPane, BorderLayout.CENTER);
         listPanel.add(completeButton, BorderLayout.SOUTH);
 
         add(listPanel, BorderLayout.CENTER);
 
 
+        JButton toggleColorButton = new JButton("Toggle Color");
+        toggleColorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                toggleColor();
+            }
+        });
+
+
+        inputPanel.add(toggleColorButton);
+
+
         setTitle("Todo List");
-        setSize(600, 600);
+        setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -121,10 +131,41 @@ public class TodoListUI extends JFrame {
         }
     }
 
+    private void toggleColor() {
+        isDarkMode = !isDarkMode;
+        updateColor();
+    }
+
+    private void updateColor() {
+        Color bgColor = isDarkMode ? Color.DARK_GRAY : Color.WHITE;
+        Color fgColor = isDarkMode ? Color.WHITE : Color.BLACK;
+
+        getContentPane().setBackground(bgColor);
+
+        for (Component component : getComponentsRecursive(this)) {
+            if (component instanceof JComponent) {
+                ((JComponent) component).setForeground(fgColor);
+                ((JComponent) component).setBackground(bgColor);
+            }
+        }
+    }
+
+    private java.util.List<Component> getComponentsRecursive(Container container) {
+        java.util.List<Component> components = new java.util.ArrayList<>();
+        for (Component component : container.getComponents()) {
+            components.add(component);
+            if (component instanceof Container) {
+                components.addAll(getComponentsRecursive((Container) component));
+            }
+        }
+        return components;
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+
                 new TodoListUI().setVisible(true);
             }
         });

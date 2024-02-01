@@ -17,7 +17,6 @@ public class Todo {
         this.category = category;
     }
 
-
     public int getId() {
         return id;
     }
