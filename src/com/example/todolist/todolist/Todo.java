@@ -1,7 +1,6 @@
 package com.example.todolist.todolist;
 
 public class Todo {
-
     private int id;
     private String task;
     private String dueDate;
